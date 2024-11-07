@@ -9,7 +9,7 @@ from ..models.project import Project
 class AllProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        fields = ['di', 'name', 'created_at']
+        fields = ['id', 'name', 'created_at']
 
 
 class CreateProjectSerializer(serializers.ModelSerializer):
@@ -17,7 +17,7 @@ class CreateProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ['di', 'name', 'created_at']
+        fields = ['id', 'name', 'description', 'created_at']
         read_only_fields = ['created_at']
 
         def validate_description(self, value):
@@ -25,28 +25,14 @@ class CreateProjectSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError('Description must be at least 30 characters')
             return value
 
+
 class ProjectDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        fields = ['di', 'name', 'created_at', 'count_of_files']
+        fields = ['id', 'name', 'description', 'count_of_files']
 
 
-class ProjectDetailAPIView(APIView):
-    @staticmethod
-    def delete(self, request, pk):
-        project = Project.objects.get(pk=pk)
-        project.delete()
-        return Response(data={'message': f'{project} deleted'}, status=status.HTTP_204_NO_CONTENT)
-
-    def put(self, request, pk):
-        project = self.get_object(pk)
-        serializer = ProjectDetailSerializer(project, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-
-
-
-
-
-
+class ProjectShortInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Project
+        fields = ('id', 'name')

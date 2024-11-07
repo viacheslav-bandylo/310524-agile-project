@@ -1,8 +1,11 @@
 from django.urls import path
 
-from apps.tasks.views.tag_views import TagApi, TagListApi
+from apps.tasks.views.tag_views import *
+from apps.tasks.views.task_views import *
 
 urlpatterns = [
-    path('tag/', TagListApi.as_view(), name='tag'),
-    path('tag/<int:pk>/', TagApi.as_view(), name='tag'),
+    path('tags/', TagListApi.as_view(), name='tags'),
+    path('tags/<int:pk>/', TagApi.as_view(), name='tags'),
+    path('tasks/', TasksListAPIView.as_view(), name='tasks'),
+    path('tasks/<int:pk>/', TaskDetailAPIView.as_view(), name='tasks'),
 ]

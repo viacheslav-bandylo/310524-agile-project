@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class Statuses(Enum):
     New = 'New'
     InProgress = 'In progress'

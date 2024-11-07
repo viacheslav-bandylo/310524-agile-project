@@ -1,11 +1,12 @@
 from django.db import models
-from django.contrib.auth.models import User
+from apps.users.models import User
 
-from apps.projects.models.project import Project
+from apps.projects.models import Project
 from apps.tasks.choices.priority import Priority
 from apps.tasks.choices.statuses import Statuses
 from apps.tasks.models.tag import Tag
 from apps.tasks.utils.set_datetime import last_day_of_month
+
 
 class Task(models.Model):
     name = models.CharField(max_length=120)
@@ -25,9 +26,3 @@ class Task(models.Model):
 
     class Meta:
         ordering = ['-deadline']
-        unique_together = (('name', 'projects'),)
-
-
-
-
-

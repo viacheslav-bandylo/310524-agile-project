@@ -9,8 +9,10 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+from datetime import timedelta
 from pathlib import Path
+
+from django.conf.global_settings import AUTH_USER_MODEL
 from environ import Env
 
 # Build paths inside the projects like this: BASE_DIR / 'subdir'.
@@ -29,6 +31,7 @@ DEBUG = env.bool("DEBUG")
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
+AUTH_USER_MODEL = 'users.User'
 
 # Application definition
 
@@ -42,12 +45,17 @@ INSTALLED_APPS = [
     #local apps
     'apps.tasks.apps.TasksConfig',
     'apps.projects.apps.ProjectConfig',
+    'apps.users.apps.UsersConfig',
 
     #3-rd party
     'rest_framework',
-
-
+    'rest_framework_simplejwt',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework_simplejwt.authentication.JWTAuthentication',),
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',),
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -57,6 +65,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'apps.users.middlewares.JWTAuthMiddleware',
 ]
 
 ROOT_URLCONF = 'agile_app.urls'
@@ -141,3 +150,11 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=7),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=15),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}

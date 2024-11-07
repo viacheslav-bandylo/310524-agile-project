@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class ProjectFile(models.Model):
     file_name = models.CharField(max_length=120)
     file_path = models.FileField(upload_to='documents/')
